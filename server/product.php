@@ -22,17 +22,24 @@ switch ($action) {
     case 'delete':
         deleteProduct();
         break;
+    case 'maxPrice':
+        maxPrice();
+        break;
     default:
         echo json_encode(['error' => 'Invalid action']);
         break;
 }
 
-function listProducts() {
+function listProducts()
+{
     global $pdo;
 
     $category_id = $_GET['categoryId'] ?? null;
     $search = $_GET['search'] ?? '';
     $sort = $_GET['sortOrder'] ?? '';
+    $minPrice = $_GET['minPrice'] ?? null;
+    $maxPrice = $_GET['maxPrice'] ?? null;
+    $minDiscount = $_GET['minDiscount'] ?? null;
 
     $sql = "SELECT * FROM Products";
     $params = [];
@@ -48,14 +55,29 @@ function listProducts() {
         $params[':search'] = "%$search%";
     }
 
+    if ($minPrice !== null) {
+        $where[] = "price >= :minPrice";
+        $params[':minPrice'] = $minPrice;
+    }
+
+    if ($maxPrice !== null) {
+        $where[] = "price <= :maxPrice";
+        $params[':maxPrice'] = $maxPrice;
+    }
+
+    if ($minDiscount !== null) {
+        $where[] = "discount >= :minDiscount";
+        $params[':minDiscount'] = $minDiscount;
+    }
+
     if ($where) {
         $sql .= " WHERE " . implode(" AND ", $where);
     }
 
     if ($sort === 'price_asc') {
-        $sql .= " ORDER BY Price ASC";
+        $sql .= " ORDER BY price ASC";
     } elseif ($sort === 'price_desc') {
-        $sql .= " ORDER BY Price DESC";
+        $sql .= " ORDER BY price DESC";
     }
 
     $stmt = $pdo->prepare($sql);
@@ -65,7 +87,10 @@ function listProducts() {
     echo json_encode($products);
 }
 
-function getProductDetails() {
+
+
+function getProductDetails()
+{
     global $pdo;
     $id = intval($_GET['id'] ?? 0);
 
@@ -87,28 +112,12 @@ function getProductDetails() {
     echo json_encode($product);
 }
 
-function createProduct() {
+function createProduct()
+{
     global $pdo;
     $data = json_decode(file_get_contents('php://input'), true);
 
-    $stmt = $pdo->prepare("INSERT INTO Products (name, description, price, stock, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
-    $stmt->execute([
-        $data['name'],
-        $data['description'],
-        $data['price'],
-        $data['stock'],
-        $data['image'],
-        $data['category_id']
-    ]);
-
-    echo json_encode(['status' => 'success', 'id' => $pdo->lastInsertId()]);
-}
-
-function editProduct() {
-    global $pdo;
-    $data = json_decode(file_get_contents('php://input'), true);
-
-    $stmt = $pdo->prepare("UPDATE Products SET name=?, description=?, price=?, stock=?, image=?, category_id=? WHERE product_id =?");
+    $stmt = $pdo->prepare("INSERT INTO Products (name, description, price, stock, image, category_id, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $data['name'],
         $data['description'],
@@ -116,13 +125,34 @@ function editProduct() {
         $data['stock'],
         $data['image'],
         $data['category_id'],
+        $data['discount'] ?? 0.00
+    ]);
+
+    echo json_encode(['status' => 'success', 'id' => $pdo->lastInsertId()]);
+}
+
+function editProduct()
+{
+    global $pdo;
+    $data = json_decode(file_get_contents('php://input'), true);
+
+    $stmt = $pdo->prepare("UPDATE Products SET name=?, description=?, price=?, stock=?, image=?, category_id=?, discount=? WHERE product_id =?");
+    $stmt->execute([
+        $data['name'],
+        $data['description'],
+        $data['price'],
+        $data['stock'],
+        $data['image'],
+        $data['category_id'],
+        $data['discount'] ?? 0.00,
         $_GET['id']
     ]);
 
     echo json_encode(['status' => 'updated']);
 }
 
-function deleteProduct() {
+function deleteProduct()
+{
     global $pdo;
     $id = intval($_POST['id'] ?? $_GET['id'] ?? 0);
 
@@ -131,4 +161,21 @@ function deleteProduct() {
 
     echo json_encode(['status' => 'deleted']);
 }
-?>
+
+function maxPrice()
+{
+    global $pdo;
+    $sql = "SELECT MAX(price) AS maxPrice FROM products";
+    $stmt = $pdo->prepare($sql);
+
+    if ($stmt && $stmt->execute()) {
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        $maxPrice = $row['maxPrice'] ?? 0;
+    } else {
+        $maxPrice = 0;
+    }
+
+    header('Content-Type: application/json');
+    echo json_encode(['maxPrice' => $maxPrice]);
+}
+

@@ -1,0 +1,55 @@
+.product-card {
+    /*width: 200px;*/
+    padding: 16px;
+    border-radius: 16px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+    text-align: center;
+    position: relative;
+    font-family: sans-serif;
+    transition: transform 0.2s;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+}
+
+
+
+.product-image {
+    border-radius: 14px;
+    object-fit: cover;
+}
+
+
+.product-name {
+    margin-top: 12px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.product-price {
+    font-size: 26px;
+    font-weight: bold;
+    color: #000;
+    margin: 14px 0;
+}
+
+.product-price-container {
+    height: 40px;
+}
+
+small {
+    position: relative;
+    top: -16px;
+}
+.product-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+
+/* Можеш додати стилі до CartButton тут, якщо потрібно */

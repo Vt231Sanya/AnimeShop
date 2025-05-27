@@ -3,12 +3,19 @@
     flex-direction: column;
     align-items: center;
     gap: 1em;
+    padding: 50px;
+    border-radius: 2em;
+    background-color: azure;
+    min-height: 100vh;
+
 }
 
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1em;
+    max-width: 80%;
+    margin: 0 auto;
 }
 
 .product-card {
@@ -21,4 +28,12 @@
 img {
     max-width: 100%;
     border-radius: 10px;
+}
+
+.sortOrder {
+    background-color: #38b2ac;
+    color: #1f2937;
+    border-radius: 30px;
+    padding: 10px 15px;
+    cursor: pointer;
 }
