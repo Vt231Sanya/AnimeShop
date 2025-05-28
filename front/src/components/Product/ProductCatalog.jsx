@@ -1,11 +1,12 @@
     import React, { useEffect, useState } from 'react';
     import axios from 'axios';
     import './ProductCatalog.css';
-    import {useSearchParams} from "react-router-dom";
+    import {useNavigate, useSearchParams} from "react-router-dom";
     import Card from "../Card/Card";
     import PriceFilter from "../PriceFilter";
 
     export default function ProductCatalog({ filters, setFilters}) {
+        const navigate = useNavigate();
         const [products, setProducts] = useState([]);
         const [cat, setCat] = useState({ category_name: ''});
         const [maxPrice, setMaxPrice] = useState({maxPrice: '1'});
@@ -58,6 +59,24 @@
                     <option value="price_asc">Ціна: Спочатку низька</option>
                     <option value="price_desc">Ціна: Спочатку висока</option>
                 </select>
+
+                <button
+                    style={{
+                        backgroundColor: "#9370DB",
+                        border: "none",
+                        color: "white",
+                        padding: "0.6rem 1.2rem",
+                        borderRadius: "8px",
+                        cursor: "pointer",
+                        fontWeight: "700",
+                        fontSize: "1rem",
+                    }}
+                    onClick={() => navigate('/create')}
+                    type="button"
+                >
+                    Створити товар
+                </button>
+
                 <div className="product-grid">
                     {products.map((product) => (
                         <Card key={product.product_id} product={product} />

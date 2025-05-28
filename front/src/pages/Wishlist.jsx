@@ -43,8 +43,8 @@ const Wishlist = (filters, setFilters) => {
         },
         list: {
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-            gap: "2rem",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "1rem",
         },
         item: {
             backgroundColor: "#fff",
