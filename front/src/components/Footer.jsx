@@ -41,13 +41,13 @@ const Footer = () => {
         <footer style={style.footer}>
             <div style={style.grid}>
                 <div style={style.section}>
-                    <strong>Контакты</strong>
-                    <span>Адрес: г. Киев, ул. Примерная, 12</span>
-                    <span>Телефон: +380 (67) 123-45-67</span>
+                    <strong>Контакти</strong>
+                    <span>Адреса: м.Житомир, пров. Шкільний 13</span>
+                    <span>Телефон: +380 (68) 069-52-38</span>
                 </div>
 
                 <div style={style.section}>
-                    <strong>Социальные сети</strong>
+                    <strong>Соціальні мережі</strong>
                     <div style={style.iconContainer}>
                         <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                             <FaInstagram style={style.icon} />
@@ -62,7 +62,7 @@ const Footer = () => {
                 </div>
 
                 <div style={style.section}>
-                    <span style={style.copyright}>&copy; 2025 Все права защищены.</span>
+                    <span style={style.copyright}>&copy; 2025 Всі права захищенні.</span>
                 </div>
             </div>
         </footer>

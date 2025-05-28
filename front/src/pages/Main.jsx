@@ -7,6 +7,7 @@ import {useNavigate} from "react-router-dom";
 import Card from "../components/Card/Card";
 
 const Main = ({filters, setFilters}) => {
+    const basePath = 'http://localhost/AnimeShop/server/';
     const styles = {
         content: {
 
@@ -25,11 +26,21 @@ const Main = ({filters, setFilters}) => {
             flexDirection: "column",
             gap: "2em",
         },
+        header: {
+            color: "#9370DB",
+            fontSize: "2.8rem",
+            fontWeight: "700",
+            borderBottom: "4px solid #FF6CF9",
+            paddingBottom: "0.5rem",
+            maxWidth: "fit-content",
+            marginLeft: "auto",
+            marginRight: "auto",
+        },
     }
     const [products, setProducts] = useState([]);
     const [disProducts, setDisProducts] = useState([]);
     const fetchProducts = async () => {
-        const response = await axios.get('http://animeshop/server/product.php', {
+        const response = await axios.get(basePath + 'product.php', {
             params: {action: 'list'}
         });
         setProducts(response.data.slice(0, 4));
@@ -47,7 +58,7 @@ const Main = ({filters, setFilters}) => {
             <Header filters={filters} setFilters={setFilters}/>
             <div style={styles.content}>
                 <div style={styles.container}>
-                    <h1>Нові товари!</h1>
+                    <h1 style={styles.header}>Нові товари!</h1>
                     <div className="product-grid">
                         {products.map((product) => (
                             <Card key={product.product_id} product={product} />
@@ -57,7 +68,7 @@ const Main = ({filters, setFilters}) => {
                     
                 </div>
                 <div style={styles.container}>
-                    <h1>Акційні товари!</h1>
+                    <h1 style={styles.header}>Акційні товари!</h1>
                     <div className="product-grid">
                         {disProducts.map((product) => (
                             <Card key={product.product_id} product={product} />

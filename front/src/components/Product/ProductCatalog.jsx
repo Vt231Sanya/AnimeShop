@@ -8,36 +8,38 @@
     export default function ProductCatalog({ filters, setFilters}) {
         const [products, setProducts] = useState([]);
         const [cat, setCat] = useState({ category_name: ''});
-        const [maxPrice, setMaxPrice] = useState({maxPrice: '10'});
+        const [maxPrice, setMaxPrice] = useState({maxPrice: '1'});
         const [searchParams] = useSearchParams();
+        const [price, setPrice] = useState({minPrice: 0, maxPrice: 10});
         const categoryId = searchParams.get('cat');
-
+        const basePath = 'http://localhost/AnimeShop/server/';
         useEffect(() => {
             fetchCategories();
             fetchProducts();
-            fetchMaxPrice()
+            fetchMaxPrice();
         }, [filters]);
 
         const fetchCategories = async () => {
-            const response = await axios.get('http://animeshop/server/categories.php', {
+            const response = await axios.get(basePath + 'categories.php', {
                 params: { action: 'list', cat: categoryId }
             });
             setCat(response.data);
         };
         const fetchProducts = async () => {
-            const response = await axios.get('http://animeshop/server/product.php', {
+            const response = await axios.get(basePath + 'product.php', {
                 params: { action: 'list', ...filters }
             });
             setProducts(response.data);
         };
         const fetchMaxPrice = async () => {
-            const response = await axios.get('http://animeshop/server/product.php', {
+            const response = await axios.get(basePath + 'product.php', {
                 params: { action: 'maxPrice'}
             });
             setMaxPrice(response.data);
             console.log(response.data);
         };
         const handlePriceChange = ([minPrice, maxPrice]) => {
+            setPrice({minPrice, maxPrice});
             setFilters((prev) => ({ ...prev, ['minPrice']: minPrice,['maxPrice']: maxPrice }));
         };
         const handleChange = (e) => {
@@ -47,9 +49,10 @@
 
         return (
             <div className={'product-catalog'}>
-                <h1>{categoryId != 0 ? cat.category_name : "Всі категорії"}</h1>
+                <h1 className={'header'}>{categoryId != 0 ? cat.category_name : "Всі категорії"}</h1>
+                {maxPrice.maxPrice != 1 &&  <PriceFilter min={0} max={maxPrice.maxPrice} onChange={handlePriceChange}/>}
 
-                <PriceFilter min={0} max={maxPrice.maxPrice} onChange={handlePriceChange}/>
+
                 <select name="sortOrder" className={"sortOrder"} value={filters.sortOrder} onChange={handleChange}>
                     <option value="">Без сортування</option>
                     <option value="price_asc">Ціна: Спочатку низька</option>

@@ -14,8 +14,8 @@ const PriceFilter = ({ min, max, onChange }) => {
     };
 
     return (
-        <div style={{ margin: '2em', width: 300 }}>
-            <h3>Фільтр по ціні</h3>
+        <div style={{ margin: '1em', width: 300 }}>
+            <h3 style={{marginBottom: '1em', textAlign: 'center'}}>Фільтр по ціні</h3>
 
             <Range
                 step={STEP}
@@ -32,7 +32,7 @@ const PriceFilter = ({ min, max, onChange }) => {
                             width: '100%',
                             background: getTrackBackground({
                                 values,
-                                colors: ['#ccc', '#548BF4', '#ccc'],
+                                colors: ['#ccc', '#9370DB', '#ccc'],
                                 min: MIN,
                                 max: MAX,
                             }),
@@ -49,7 +49,7 @@ const PriceFilter = ({ min, max, onChange }) => {
                             ...props.style,
                             height: '24px',
                             width: '24px',
-                            backgroundColor: '#548BF4',
+                            backgroundColor: '#9370DB',
                             borderRadius: '50%',
                             display: 'flex',
                             justifyContent: 'center',
@@ -57,21 +57,6 @@ const PriceFilter = ({ min, max, onChange }) => {
                             boxShadow: '0 2px 6px #AAA',
                         }}
                     >
-                        <div
-                            style={{
-                                position: 'absolute',
-                                top: '-28px',
-                                color: '#fff',
-                                fontWeight: 'bold',
-                                fontSize: '12px',
-                                fontFamily: 'Arial,Helvetica Neue,Helvetica,sans-serif',
-                                padding: '4px',
-                                borderRadius: '4px',
-                                backgroundColor: '#548BF4',
-                            }}
-                        >
-                            {values[index]} грн
-                        </div>
                     </div>
                 )}
             />

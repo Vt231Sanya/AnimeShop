@@ -1,13 +1,14 @@
 .product-card {
-    /*width: 200px;*/
-    padding: 16px;
+    padding: 15px;
     border-radius: 16px;
+    border-color: #1f2937;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     text-align: center;
     position: relative;
     font-family: sans-serif;
     transition: transform 0.2s;
+    cursor: pointer;
 }
 
 .product-card:hover {
@@ -32,7 +33,7 @@
     font-size: 26px;
     font-weight: bold;
     color: #000;
-    margin: 14px 0;
+    margin-bottom: 14px;
 }
 
 .product-price-container {
@@ -41,7 +42,7 @@
 
 small {
     position: relative;
-    top: -16px;
+    top: -20px;
 }
 .product-actions {
     margin-top: 10px;

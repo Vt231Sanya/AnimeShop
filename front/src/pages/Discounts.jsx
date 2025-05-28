@@ -5,6 +5,7 @@ import Footer from "../components/Footer";
 import Card from "../components/Card/Card";
 
 const Discounts = ({filters, setFilters}) => {
+    const basePath = 'http://localhost/AnimeShop/server/';
     const styles = {
         content: {
             textAlign: "center",
@@ -23,7 +24,7 @@ const Discounts = ({filters, setFilters}) => {
     const [products, setProducts] = useState([]);
 
     const fetchProducts = async () => {
-        const response = await axios.get('http://animeshop/server/product.php', {
+        const response = await axios.get(basePath + 'product.php', {
             params: { action: 'list' }
         });
         setProducts(response.data);

@@ -1,18 +1,22 @@
 import React, {useEffect, useState} from "react";
 import { FaThLarge, FaSearch, FaHeart, FaShoppingCart, FaUser, FaBars } from "react-icons/fa";
-import { IoMdArrowDropdown } from "react-icons/io";
 import  logo from"../img/logo.png"
 import axios from "axios";
 import ModalSearch from "./ModalSearch";
 import {useNavigate} from "react-router-dom";
+import Logout from "./Logout";
+import Cookies from "js-cookie";
 
 const Header = ({filters, setFilters}) => {
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [searchInput, setSearchInput] = useState("");
-
+    const basePath = 'http://localhost/AnimeShop/server/';
     const [modal, setModal] = useState(false);
     const navigate = useNavigate();
+    const [isLogoutOpen, setIsLogoutOpen] = useState(false);
+
+    const isAuthenticated = Cookies.get('isAuth');
     const handleChange = (e) => {
         setSearchInput(e.target.value);
         setModal(true);
@@ -32,16 +36,33 @@ const Header = ({filters, setFilters}) => {
         navigate("/product?cat=" + e.target.value);
     }
 
+    const handleLogoutClick = () => {
+        setIsLogoutOpen(true);
+    };
+
+    const handleClose = () => {
+        setIsLogoutOpen(false);
+    };
+
+    const handleConfirmLogout = () => {
+        setIsLogoutOpen(false);
+        Cookies.remove('isAuth');
+        Cookies.remove('userId');
+        Cookies.remove('userName');
+        navigate('/login');
+    };
+
     const fetchCategories = async () => {
-        const response = await axios.get('http://animeshop/server/categories.php');
+        const response = await axios.get(basePath + 'categories.php');
         setCategories(response.data);
     };
     const fetchProducts = async () => {
-        const response = await axios.get('http://animeshop/server/product.php', {
+        const response = await axios.get(basePath + 'product.php', {
             params: { action: 'list', search: searchInput }
         });
         setProducts(response.data);
     };
+
     useEffect(() => {
         fetchCategories();
         fetchProducts();
@@ -64,7 +85,7 @@ const Header = ({filters, setFilters}) => {
             height: "50px",
         },
         catalogButton: {
-            backgroundColor: "#38b2ac",
+            backgroundColor: "#9370DB",
             color: "azure",
             border: "none",
             borderRadius: "30px",
@@ -93,7 +114,7 @@ const Header = ({filters, setFilters}) => {
             flex: 1,
         },
         salesButton: {
-            backgroundColor: "#ef4444",
+            backgroundColor: "#9370DB",
             color: "white",
             border: "none",
             borderRadius: "30px",
@@ -165,13 +186,16 @@ const Header = ({filters, setFilters}) => {
                 <button style={styles.salesButton} onClick={() => navigate('/discounts')}>Акції</button>
 
                 <div style={styles.iconGroup}>
-                    <FaHeart style={styles.icon} />
-                    <FaShoppingCart style={styles.icon} />
-                    <span style={styles.lang}>UA</span>
-                    <FaUser style={styles.icon} />
-                    <FaBars style={styles.icon} />
+                    <FaHeart onClick={() => {isAuthenticated ? navigate('/wishlist') : navigate('/login')}} style={styles.icon} />
+                    <FaShoppingCart onClick={() => {isAuthenticated ? navigate('/cart') : navigate('/login')}} style={styles.icon} />
+                    <FaUser onClick={() => {isAuthenticated ? handleLogoutClick() : navigate('/login')}} style={styles.icon} />
                 </div>
             </div>
+            <Logout
+                isOpen={isLogoutOpen}
+                onClose={handleClose}
+                onConfirm={handleConfirmLogout}
+            />
         </header>
     );
 };

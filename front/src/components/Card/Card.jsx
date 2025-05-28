@@ -2,26 +2,79 @@ import React, {useEffect, useState} from 'react';
 import './Card.css';
 import CheckBox from "../CheckBox";
 import CartButton from "../CartButton";
-import axios from "axios";
+import {useNavigate} from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Card = ({product}) => {
-    // const [discounts, setDiscounts] = useState([])
-    // const fetchDiscounts = async () => {
-    //     const response = await axios.get('http://animeshop/server/discounts.php', {
-    //         params: { action: 'all' }
-    //     });
-    //     setDiscounts(response.data);
-    // }
-    // const discountProduct = discounts.find(d => d.product_id === product.product_id);
-    // const finalProduct = discountProduct || product;
-    //
-    // useEffect(() => {
-    //     fetchDiscounts();
-    // })
-    return (
+    const navigate = useNavigate();
+    const basePath = 'http://localhost/AnimeShop/server/';
 
+    const isAuth = Cookies.get('isAuth') || false;
+    const userId = isAuth ? Cookies.get('userId') : 0;
+    const [inWishlist, setInWishlist] = useState(false);
+    const [inCart, setInCart] = useState(false);
+    const checkCart = () => {
+        fetch(basePath + `cart.php?customer_id=${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                data.forEach(item => {
+                    if (item.product_id === product.product_id) {
+                        setInCart(true);
+                    }
+                })
+            });
+    }
+    const addToCart = async() => {
+        await fetch(basePath + 'cart', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ customer_id: userId, product_id: product.product_id }),
+        });
+        checkCart();
+    }
+    useEffect(() => {
+        fetch(basePath + `wishlist.php?customer_id=${userId}`)
+            .then(res => res.json())
+            .then(data => {
+                if (data.wishlist && data.wishlist.includes(product.product_id)) {
+                    setInWishlist(true);
+                }
+            });
+        checkCart();
+    }, [product.product_id, userId]);
+
+    const toggleWishlist = () => {
+        if (!inWishlist) {
+            // добавить в вишлист
+            fetch(basePath + 'wishlist', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer_id: userId, product_id: product.product_id }),
+            })
+                .then(res => res.json())
+                .then(() => setInWishlist(true))
+                .catch(error => {
+                    console.error("Помилка при запиті:", error);
+                    alert("Не вдалося оновити вишліст.");
+            });
+        } else {
+            // удалить из вишлиста
+            fetch(basePath + 'wishlist', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ customer_id: userId, product_id: product.product_id }),
+            })
+                .then(res => res.json())
+                .then(() => setInWishlist(false))
+                .catch(error => {
+                    console.error("Помилка при запиті:", error);
+                    alert("Не вдалося оновити вишліст.");
+                });
+        }
+    };
+    return (
             product.stock > 0 &&
-                <div key={product.product_id} className="product-card">
+                <div key={product.product_id} className="product-card" onClick={() => navigate(`/product/details?id=${product.product_id}`)} >
 
                     <img src={product.image} alt={product.name} className="product-image" />
 
@@ -36,8 +89,12 @@ const Card = ({product}) => {
                     }
 
                     <div className="product-actions">
-                        <CartButton />
-                        <CheckBox title="Like" />
+                        <CartButton onClick={(e) => {e.stopPropagation(); isAuth ? inCart ? navigate('/cart') : addToCart() : navigate('/login')}}>
+                            {inCart ? "У кошику" : "Придбати"}
+                        </CartButton>
+
+
+                        <CheckBox checked={inWishlist} onClick={(e) => { e.stopPropagation(); isAuth ? toggleWishlist() : navigate('/login')}} title="Like" />
                     </div>
                 </div>
 
