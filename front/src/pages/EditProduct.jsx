@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Cookies from "js-cookie";
 
-const CreateProduct = ({ filters, setFilters }) => {
+const EditProduct = ({ filters, setFilters }) => {
     const [formData, setFormData] = useState({
         name: "",
         description: "",
@@ -18,20 +18,31 @@ const CreateProduct = ({ filters, setFilters }) => {
 
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
+    const { id } = useParams();
     const isAuth = Cookies.get("isAuth") || false;
     const basePath = "http://localhost/AnimeShop/server/";
-    const fetchCategories = async () => {
-        const response = await axios.get(basePath + 'categories.php');
-        setCategories(response.data);
-    };
+
     useEffect(() => {
         if (!isAuth) {
             navigate("/login");
             return;
         }
-        // Завантажуємо список категорій з бекенду
+
+        // Завантаження категорій
+        const fetchCategories = async () => {
+            const res = await axios.get(basePath + "categories.php");
+            setCategories(res.data);
+        };
+
+        // Завантаження даних продукту
+        const fetchProduct = async () => {
+            const res = await axios.get(basePath + `product.php?action=details&id=${id}`);
+            setFormData(res.data);
+        };
+
         fetchCategories();
-    }, [isAuth, navigate]);
+        fetchProduct();
+    }, [id, isAuth, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -44,7 +55,6 @@ const CreateProduct = ({ filters, setFilters }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Валідація
         if (
             !formData.name.trim() ||
             !formData.description.trim() ||
@@ -58,20 +68,12 @@ const CreateProduct = ({ filters, setFilters }) => {
         }
 
         try {
-            await axios.post(basePath + "product.php?action=create", {
-                name: formData.name,
-                description: formData.description,
-                price: formData.price,
-                stock: formData.stock,
-                image: formData.image,
-                discount: formData.discount,
-                category_id: formData.category_id,
-            });
-
-            alert("Продукт успішно створено!");
+            await axios.post(`${basePath}product.php?action=edit&id=${id}`, formData);
+            alert("Продукт успішно оновлено!");
             navigate("/product");
         } catch (error) {
-            console.error("Помилка при створенні продукту", error);
+            console.error("Помилка при оновленні продукту", error);
+            alert("Помилка при оновленні продукту.");
         }
     };
 
@@ -80,7 +82,7 @@ const CreateProduct = ({ filters, setFilters }) => {
             <Header filters={filters} setFilters={setFilters} />
             <main style={{ padding: "2rem", maxWidth: "600px", margin: "0 auto", borderRadius: "2em", backgroundColor: "azure" }}>
                 <h1 style={{ marginBottom: "1.5rem", textAlign: "center" }}>
-                    Створити новий продукт
+                    Редагувати продукт
                 </h1>
 
                 <form onSubmit={handleSubmit}>
@@ -157,7 +159,7 @@ const CreateProduct = ({ filters, setFilters }) => {
                             required
                             style={{ width: "100%", marginBottom: "1rem", padding: "0.5rem" }}
                         >
-                            <option value="0">Всі категорії</option>
+                            <option value="0">Виберіть категорію</option>
                             {categories.map((cat) => (
                                 <option key={cat.category_id} value={cat.category_id}>
                                     {cat.category_name}
@@ -183,7 +185,7 @@ const CreateProduct = ({ filters, setFilters }) => {
                     <button
                         type="submit"
                         style={{
-                            backgroundColor: "#9370DB",
+                            backgroundColor: "#6A5ACD",
                             color: "azure",
                             padding: "0.7rem 1.5rem",
                             border: "none",
@@ -193,7 +195,7 @@ const CreateProduct = ({ filters, setFilters }) => {
                             width: "100%",
                         }}
                     >
-                        Створити продукт
+                        Зберегти зміни
                     </button>
                 </form>
             </main>
@@ -202,4 +204,4 @@ const CreateProduct = ({ filters, setFilters }) => {
     );
 };
 
-export default CreateProduct;
+export default EditProduct;

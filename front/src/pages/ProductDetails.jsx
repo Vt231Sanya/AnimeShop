@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {use, useEffect, useState} from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
@@ -106,6 +106,7 @@ const ProductDetails = ({ filters, setFilters }) => {
             display: "flex",
             gap: "2em",
             alignItems: "center",
+            marginBottom: "1rem",
         },
         reviewForm: {
             marginTop: "2rem",
@@ -172,7 +173,7 @@ const ProductDetails = ({ filters, setFilters }) => {
 
     // Нові стани для відгуку
     const [newReviewText, setNewReviewText] = useState("");
-    const [newReviewRating, setNewReviewRating] = useState(0);
+    const [newReviewRating, setNewReviewRating] = useState(5);
 
     const checkCart = () => {
         fetch(basePath + `cart.php?customer_id=${userId}`)
@@ -285,6 +286,19 @@ const ProductDetails = ({ filters, setFilters }) => {
         }
     };
 
+    const delProduct = async () => {
+        try {
+            await axios.delete(basePath + `product.php?action=delete&id=${productId}`);
+            alert(
+                "Товар успішно видалений. Ви можете повернутися до списку товарів, щоб відновити відгуки."
+            );
+
+
+        } catch (err) {
+            console.error("Failed to delete item:", err);
+        }
+    }
+
     return (
         <div style={styles.main}>
             <Header filters={filters} setFilters={setFilters} />
@@ -323,6 +337,30 @@ const ProductDetails = ({ filters, setFilters }) => {
                                 title="Like"
                             />
                         </div>
+                        {userId == 1 &&
+                            <div style={styles.productActions}>
+                                <button
+                                    style={styles.buttonCancel}
+                                    onClick={() => {navigate('/edit/' + productId)}}
+                                    type="button"
+                                >
+                                    Редагувати товар
+                                </button>
+                                <button
+                                    style={styles.buttonCancel}
+                                    onClick={() => {
+                                        delProduct();
+                                        navigate("/product");
+                                        alert("Товар видаленний")
+                                    }}
+                                    type="button"
+                                >
+                                    Видалити товар
+                                </button>
+                            </div>
+                        }
+
+
                     </div>
                 </div>
 
@@ -359,7 +397,7 @@ const ProductDetails = ({ filters, setFilters }) => {
                                     value={newReviewRating}
                                     onChange={(e) => setNewReviewRating(parseInt(e.target.value))}
                                 >
-                                    {[0, 1, 2, 3, 4, 5].map((num) => (
+                                    {[5, 4, 3, 2, 1].map((num) => (
                                         <option key={num} value={num}>
                                             {num}
                                         </option>

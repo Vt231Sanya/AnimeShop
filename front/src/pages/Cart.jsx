@@ -3,6 +3,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import {useNavigate} from "react-router-dom";
 
 const Cart = ({ filters, setFilters }) => {
     const styles = {
@@ -32,6 +33,7 @@ const Cart = ({ filters, setFilters }) => {
             marginBottom: "1.2rem",
             boxShadow: "0 8px 20px rgba(147, 112, 219, 0.15)",
             gap: "1rem",
+            cursor: "pointer",
         },
         name: {
             fontWeight: "600",
@@ -91,13 +93,15 @@ const Cart = ({ filters, setFilters }) => {
         buttonDiv: {
             display: "flex",
             justifyContent: "flex-end",
-
+            flexDirection: "column",
+            alignItems: "flex-end",
         },
     };
 
     const basePath = 'http://localhost/AnimeShop/server/';
     const userId = Cookies.get('userId');
     const [cartItems, setCartItems] = useState([]);
+    const navigate = useNavigate();
 
     const fetchProducts = async () => {
         try {
@@ -110,18 +114,27 @@ const Cart = ({ filters, setFilters }) => {
         }
     };
 
+    const [phoneNumber, setPhoneNumber] = useState("");
+
     const createOrder = async () => {
+        if (!phoneNumber.trim()) {
+            alert("Будь ласка, введіть номер телефону.");
+            return;
+        }
+
         try {
             const response = await axios.post(basePath + 'cart.php', {
                 action: "checkout",
-                customer_id: userId
+                customer_id: userId,
+                phone: phoneNumber // <- Додано параметр телефону
             });
             console.log(response.data);
         } catch (err) {
             console.error("Error creating order:", err);
         }
         fetchProducts();
-    }
+    };
+
 
     useEffect(() => {
         fetchProducts();
@@ -162,6 +175,7 @@ const Cart = ({ filters, setFilters }) => {
         0
     );
 
+
     return (
         <div style={styles.main}>
             <Header filters={filters} setFilters={setFilters} />
@@ -173,13 +187,15 @@ const Cart = ({ filters, setFilters }) => {
                 ) : (
                     <>
                         {cartItems.map((item) => (
-                            <div key={item.cart_id} style={styles.item}>
+                            <div onClick={() => navigate('/product/details?id=' + item.product_id)} key={item.cart_id} style={styles.item}>
                                 <div style={styles.name}>{item.name}</div>
                                 <input
                                     type="number"
                                     value={item.quantity}
                                     min="1"
+                                    max={item.stock + ''}
                                     style={styles.quantityInput}
+                                    onClick={(e) => e.stopPropagation()}
                                     onChange={(e) =>
                                         handleQuantityChange(item.cart_id, parseInt(e.target.value))
                                     }
@@ -189,7 +205,10 @@ const Cart = ({ filters, setFilters }) => {
                                 </div>
                                 <button
                                     style={styles.deleteBtn}
-                                    onClick={() => handleDelete(item.cart_id)}
+                                    onClick={(e) => {
+                                        handleDelete(item.cart_id);
+                                        e.stopPropagation();
+                                    }}
                                 >
                                     ✕
                                 </button>
@@ -197,10 +216,25 @@ const Cart = ({ filters, setFilters }) => {
                         ))}
                         <div style={styles.total}>Загалом: {totalPrice} грн</div>
                         <div style={styles.buttonDiv}>
+                            <input
+                                type="tel"
+                                placeholder="Ваш номер телефону"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                                style={{
+                                    padding: "0.8rem",
+                                    fontSize: "1rem",
+                                    borderRadius: "8px",
+                                    border: "1px solid #ccc",
+                                    marginTop: "1rem",
+                                    // width: "210px"
+                                }}
+                            />
                             <button style={styles.button} onClick={createOrder}>
                                 Зробити замовлення
                             </button>
                         </div>
+
 
                     </>
                 )}

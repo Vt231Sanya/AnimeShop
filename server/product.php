@@ -41,6 +41,9 @@ function listProducts()
     $maxPrice = $_GET['maxPrice'] ?? null;
     $minDiscount = $_GET['minDiscount'] ?? null;
 
+    $limit = isset($_GET['limit']) ? (int)$_GET['limit'] : 20;
+    $offset = isset($_GET['offset']) ? (int)$_GET['offset'] : 0;
+
     $sql = "SELECT * FROM Products";
     $params = [];
     $where = [];
@@ -80,12 +83,25 @@ function listProducts()
         $sql .= " ORDER BY price DESC";
     }
 
+    // Добавляем limit и offset
+    $sql .= " LIMIT :limit OFFSET :offset";
+    $params[':limit'] = $limit;
+    $params[':offset'] = $offset;
+
     $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
+
+    // Привязываем limit и offset как int
+    foreach ($params as $key => $value) {
+        $paramType = is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+        $stmt->bindValue($key, $value, $paramType);
+    }
+
+    $stmt->execute();
     $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode($products);
 }
+
 
 
 
@@ -116,7 +132,9 @@ function createProduct()
 {
     global $pdo;
     $data = json_decode(file_get_contents('php://input'), true);
-
+    if (!$data || !isset($data['name']) || trim($data['name']) === "") {
+        return;
+    }
     $stmt = $pdo->prepare("INSERT INTO Products (name, description, price, stock, image, category_id, discount) VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([
         $data['name'],
@@ -156,11 +174,17 @@ function deleteProduct()
     global $pdo;
     $id = intval($_POST['id'] ?? $_GET['id'] ?? 0);
 
-    $stmt = $pdo->prepare("DELETE FROM Products WHERE product_id = ?");
-    $stmt->execute([$id]);
+    // Удалить связанные отзывы
+    $stmtReviews = $pdo->prepare("DELETE FROM Reviews WHERE product_id = ?");
+    $stmtReviews->execute([$id]);
+
+    // Удалить сам продукт
+    $stmtProduct = $pdo->prepare("DELETE FROM Products WHERE product_id = ?");
+    $stmtProduct->execute([$id]);
 
     echo json_encode(['status' => 'deleted']);
 }
+
 
 function maxPrice()
 {

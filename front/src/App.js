@@ -12,6 +12,8 @@ import Wishlist from "./pages/Wishlist";
 import Cart from "./pages/Cart";
 import Orders from "./pages/Orders";
 import CreateProduct from "./pages/CreateProduct";
+import EditProduct from "./pages/EditProduct";
+import NotFound from "./pages/NotFound";
 
 function App() {
     const [filters, setFilters] = useState({
@@ -31,6 +33,8 @@ function App() {
                   <Route path="/cart" element={<Cart filters={filters} setFilters={setFilters}/>} />
                   <Route path="/orders" element={<Orders filters={filters} setFilters={setFilters}/>} />
                   <Route path="/create" element={<CreateProduct filters={filters} setFilters={setFilters}/>} />
+                  <Route path="/edit/:id" element={<EditProduct filters={filters} setFilters={setFilters} />} />
+                  <Route path="*" element={<NotFound />} />
                   <Route
                       path="/product"
                       element={<Catalog filters={filters} setFilters={setFilters}/>}
