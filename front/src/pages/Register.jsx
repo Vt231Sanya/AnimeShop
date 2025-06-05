@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 
 const Register = ({ filters, setFilters }) => {
     const navigate = useNavigate();
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const [formData, setFormData] = useState({});
 
     const [error, setError] = useState("");

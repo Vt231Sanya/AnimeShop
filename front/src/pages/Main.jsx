@@ -6,7 +6,7 @@ import NextButton from "../components/NextButton";
 import Card from "../components/Card/Card";
 
 const Main = ({ filters, setFilters }) => {
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const [products, setProducts] = useState([]);
     const [disProducts, setDisProducts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -49,7 +49,7 @@ const Main = ({ filters, setFilters }) => {
     const fetchProducts = async () => {
         setLoading(true);
         try {
-            const response = await axios.get(basePath + 'product.php', {
+            const response = await axios.get(basePath + 'product', {
                 params: { action: 'list' }
             });
             setProducts(response.data.slice(0, 4));

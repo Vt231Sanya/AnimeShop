@@ -11,7 +11,7 @@ const Header = ({filters, setFilters}) => {
     const [categories, setCategories] = useState([]);
     const [products, setProducts] = useState([]);
     const [searchInput, setSearchInput] = useState("");
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const [modal, setModal] = useState(false);
     const navigate = useNavigate();
     const [isLogoutOpen, setIsLogoutOpen] = useState(false);
@@ -53,11 +53,11 @@ const Header = ({filters, setFilters}) => {
     };
 
     const fetchCategories = async () => {
-        const response = await axios.get(basePath + 'categories.php');
+        const response = await axios.get(basePath + 'categories');
         setCategories(response.data);
     };
     const fetchProducts = async () => {
-        const response = await axios.get(basePath + 'product.php', {
+        const response = await axios.get(basePath + 'product', {
             params: { action: 'list', search: searchInput }
         });
         setProducts(response.data);

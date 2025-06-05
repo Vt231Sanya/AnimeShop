@@ -7,7 +7,7 @@ import Footer from "../components/Footer";
 
 const Wishlist = (filters, setFilters) => {
     const [wishList, setWishList] = useState([]);
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const userId = Cookies.get('userId');
 
     const fetchWishlist = async () => {

@@ -20,7 +20,7 @@ const EditProduct = ({ filters, setFilters }) => {
     const navigate = useNavigate();
     const { id } = useParams();
     const isAuth = Cookies.get("isAuth") || false;
-    const basePath = "http://localhost/AnimeShop/server/";
+    const basePath = "http://localhost/AnimeShop/server/index.php?controller=";
 
     useEffect(() => {
         if (!isAuth) {
@@ -28,15 +28,13 @@ const EditProduct = ({ filters, setFilters }) => {
             return;
         }
 
-        // Завантаження категорій
         const fetchCategories = async () => {
-            const res = await axios.get(basePath + "categories.php");
+            const res = await axios.get(basePath + "categories");
             setCategories(res.data);
         };
 
-        // Завантаження даних продукту
         const fetchProduct = async () => {
-            const res = await axios.get(basePath + `product.php?action=details&id=${id}`);
+            const res = await axios.get(basePath + `product?action=details&id=${id}`);
             setFormData(res.data);
         };
 
@@ -68,7 +66,7 @@ const EditProduct = ({ filters, setFilters }) => {
         }
 
         try {
-            await axios.post(`${basePath}product.php?action=edit&id=${id}`, formData);
+            await axios.post(`${basePath}product?action=edit&id=${id}`, formData);
             alert("Продукт успішно оновлено!");
             navigate("/product");
         } catch (error) {

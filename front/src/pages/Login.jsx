@@ -10,7 +10,7 @@ const Login = ({ filters, setFilters }) => {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const navigate = useNavigate();
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
 
     const styles = {
         page: {

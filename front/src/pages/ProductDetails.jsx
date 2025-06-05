@@ -158,7 +158,7 @@ const ProductDetails = ({ filters, setFilters }) => {
     const navigate = useNavigate();
     const userId = isAuth ? Cookies.get("userId") : 0;
     const [inWishlist, setInWishlist] = useState(false);
-    const basePath = "http://localhost/AnimeShop/server/";
+    const basePath = "http://localhost/AnimeShop/server/index.php?controller=";
     const [searchParams] = useSearchParams();
     const productId = searchParams.get("id");
     const [product, setProduct] = useState({
@@ -176,7 +176,7 @@ const ProductDetails = ({ filters, setFilters }) => {
     const [newReviewRating, setNewReviewRating] = useState(5);
 
     const checkCart = () => {
-        fetch(basePath + `cart.php?customer_id=${userId}`)
+        fetch(basePath + `cart?customer_id=${userId}`)
             .then((res) => res.json())
             .then((data) => {
                 let found = false;
@@ -199,7 +199,7 @@ const ProductDetails = ({ filters, setFilters }) => {
     };
 
     useEffect(() => {
-        fetch(basePath + `wishlist.php?customer_id=${userId}`)
+        fetch(basePath + `wishlist?customer_id=${userId}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.wishlist && data.wishlist.includes(product.product_id)) {
@@ -240,7 +240,7 @@ const ProductDetails = ({ filters, setFilters }) => {
 
     const fetchProduct = async () => {
         try {
-            const response = await axios.get(basePath + "product.php", {
+            const response = await axios.get(basePath + "product", {
                 params: { action: "details", id: productId },
             });
             setProduct(response.data);
@@ -267,7 +267,7 @@ const ProductDetails = ({ filters, setFilters }) => {
             return;
         }
         try {
-            await fetch(basePath + "reviews.php", {
+            await fetch(basePath + "reviews", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -288,7 +288,7 @@ const ProductDetails = ({ filters, setFilters }) => {
 
     const delProduct = async () => {
         try {
-            await axios.delete(basePath + `product.php?action=delete&id=${productId}`);
+            await axios.delete(basePath + `product?action=delete&id=${productId}`);
             alert(
                 "Товар успішно видалений. Ви можете повернутися до списку товарів, щоб відновити відгуки."
             );

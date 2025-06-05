@@ -19,9 +19,9 @@ const CreateProduct = ({ filters, setFilters }) => {
     const [categories, setCategories] = useState([]);
     const navigate = useNavigate();
     const isAuth = Cookies.get("isAuth") || false;
-    const basePath = "http://localhost/AnimeShop/server/";
+    const basePath = "http://localhost/AnimeShop/server/index.php?controller=";
     const fetchCategories = async () => {
-        const response = await axios.get(basePath + 'categories.php');
+        const response = await axios.get(basePath + 'categories');
         setCategories(response.data);
     };
     useEffect(() => {
@@ -58,7 +58,7 @@ const CreateProduct = ({ filters, setFilters }) => {
         }
 
         try {
-            await axios.post(basePath + "product.php?action=create", {
+            await axios.post(basePath + "product?action=create", {
                 name: formData.name,
                 description: formData.description,
                 price: formData.price,

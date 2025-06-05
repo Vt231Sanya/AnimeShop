@@ -6,7 +6,7 @@ import Footer from "../components/Footer";
 
 const Orders = ({ filters, setFilters }) => {
     const [ordersByDate, setOrdersByDate] = useState({});
-    const basePath = "http://localhost/AnimeShop/server/";
+    const basePath = "http://localhost/AnimeShop/server/index.php?controller=";
     const userId = Cookies.get("userId");
 
     const styles = {
@@ -72,7 +72,7 @@ const Orders = ({ filters, setFilters }) => {
     useEffect(() => {
         const fetchOrders = async () => {
             try {
-                const response = await axios.get(basePath + "orders.php", {
+                const response = await axios.get(basePath + "orders", {
                     params: { customer_id: userId },
                 });
                 if (response.data.status === "success") {

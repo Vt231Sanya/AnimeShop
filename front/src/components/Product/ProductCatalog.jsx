@@ -18,7 +18,7 @@ export default function ProductCatalog({ filters, setFilters }) {
     const [hasMore, setHasMore] = useState(true);
     const userId = Cookies.get("userId");
     const categoryId = searchParams.get('cat');
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const isFetchingRef = useRef(false);
 
 
@@ -52,7 +52,7 @@ export default function ProductCatalog({ filters, setFilters }) {
     }, [loading, hasMore]);
 
     const fetchCategories = async () => {
-        const response = await axios.get(basePath + 'categories.php', {
+        const response = await axios.get(basePath + 'categories', {
             params: { action: 'list', cat: categoryId }
         });
         setCat(response.data);
@@ -63,7 +63,7 @@ export default function ProductCatalog({ filters, setFilters }) {
         isFetchingRef.current = true;
         setLoading(true);
         try {
-            const response = await axios.get(basePath + 'product.php', {
+            const response = await axios.get(basePath + 'product', {
                 params: {
                     action: 'list',
                     limit: 20,
@@ -93,7 +93,7 @@ export default function ProductCatalog({ filters, setFilters }) {
 
 
     const fetchMaxPrice = async () => {
-        const response = await axios.get(basePath + 'product.php', {
+        const response = await axios.get(basePath + 'product', {
             params: { action: 'maxPrice' }
         });
         setMaxPrice(response.data);

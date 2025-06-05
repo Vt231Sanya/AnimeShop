@@ -7,14 +7,14 @@ import Cookies from "js-cookie";
 
 const Card = ({product}) => {
     const navigate = useNavigate();
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
 
     const isAuth = Cookies.get('isAuth') || false;
     const userId = isAuth ? Cookies.get('userId') : 0;
     const [inWishlist, setInWishlist] = useState(false);
     const [inCart, setInCart] = useState(false);
     const checkCart = () => {
-        fetch(basePath + `cart.php?customer_id=${userId}`)
+        fetch(basePath + `cart?customer_id=${userId}`)
             .then(res => res.json())
             .then(data => {
                 data.forEach(item => {
@@ -33,7 +33,7 @@ const Card = ({product}) => {
         checkCart();
     }
     useEffect(() => {
-        fetch(basePath + `wishlist.php?customer_id=${userId}`)
+        fetch(basePath + `wishlist?customer_id=${userId}`)
             .then(res => res.json())
             .then(data => {
                 if (data.wishlist && data.wishlist.includes(product.product_id)) {

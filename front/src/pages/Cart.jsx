@@ -98,14 +98,14 @@ const Cart = ({ filters, setFilters }) => {
         },
     };
 
-    const basePath = 'http://localhost/AnimeShop/server/';
+    const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const userId = Cookies.get('userId');
     const [cartItems, setCartItems] = useState([]);
     const navigate = useNavigate();
 
     const fetchProducts = async () => {
         try {
-            const response = await axios.get(basePath + 'cart.php', {
+            const response = await axios.get(basePath + 'cart', {
                 params: { customer_id: userId }
             });
             setCartItems(Array.isArray(response.data) ? response.data : []);
@@ -123,7 +123,7 @@ const Cart = ({ filters, setFilters }) => {
         }
 
         try {
-            const response = await axios.post(basePath + 'cart.php', {
+            const response = await axios.post(basePath + 'cart', {
                 action: "checkout",
                 customer_id: userId,
                 phone: phoneNumber // <- Додано параметр телефону
@@ -144,7 +144,7 @@ const Cart = ({ filters, setFilters }) => {
         if (newQuantity < 1) return;
 
         try {
-            await axios.post(basePath + 'cart.php', {
+            await axios.post(basePath + 'cart', {
                 action: "update",
                 cart_id,
                 quantity: newQuantity
@@ -161,7 +161,7 @@ const Cart = ({ filters, setFilters }) => {
 
     const handleDelete = async (cart_id) => {
         try {
-            await axios.delete(basePath + 'cart.php', {
+            await axios.delete(basePath + 'cart', {
                 data: { cart_id }
             });
             fetchProducts();
