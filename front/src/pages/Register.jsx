@@ -94,7 +94,7 @@ const Register = ({ filters, setFilters }) => {
         setError("");
         setSuccess("Успішна реєстрація!");
         try {
-            const response = await fetch(basePath + 'auth?action=register', {
+            const response = await fetch(basePath + 'auth&action=register', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

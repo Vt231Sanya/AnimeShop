@@ -4,7 +4,7 @@ session_start();
 header('Content-Type: application/json');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Content-Type");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
+header("Access-Control-Allow-Methods: GET, POST, OPTIONS, DELETE, PUT");
 
 require_once 'connect.php';
 
@@ -14,6 +14,10 @@ $method = $_SERVER['REQUEST_METHOD'];
 $params = array_merge($_GET, $_POST);
 $input = json_decode(file_get_contents('php://input'), true) ?? [];
 global $pdo;
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
 switch ($uri) {
     case 'auth':
         require_once 'controllers/AuthController.php';
@@ -89,7 +93,7 @@ switch ($uri) {
         $controller = new WishlistController($pdo);
         $controller->handle($_SERVER['REQUEST_METHOD'], $input, $_GET);
         break;
-        
+
     default:
         http_response_code(404);
         echo json_encode(['success' => false, 'message' => 'Unknown controller']);

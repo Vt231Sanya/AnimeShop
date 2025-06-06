@@ -14,7 +14,7 @@ const Card = ({product}) => {
     const [inWishlist, setInWishlist] = useState(false);
     const [inCart, setInCart] = useState(false);
     const checkCart = () => {
-        fetch(basePath + `cart?customer_id=${userId}`)
+        fetch(basePath + `cart&customer_id=${userId}`)
             .then(res => res.json())
             .then(data => {
                 data.forEach(item => {
@@ -24,16 +24,26 @@ const Card = ({product}) => {
                 })
             });
     }
-    const addToCart = async() => {
-        await fetch(basePath + 'cart', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ customer_id: userId, product_id: product.product_id }),
-        });
-        checkCart();
-    }
+    const addToCart = async () => {
+        try {
+            const response = await fetch(basePath + 'cart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'add',
+                    customer_id: userId,
+                    product_id: product.product_id,
+                }),
+            });
+            const result = await response.json();
+            checkCart();
+        } catch (error) {
+            alert("Сталася помилка під час додавання до кошика.");
+        }
+    };
+
     useEffect(() => {
-        fetch(basePath + `wishlist?customer_id=${userId}`)
+        fetch(basePath + `wishlist&customer_id=${userId}`)
             .then(res => res.json())
             .then(data => {
                 if (data.wishlist && data.wishlist.includes(product.product_id)) {

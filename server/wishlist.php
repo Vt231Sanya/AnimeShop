@@ -58,16 +58,13 @@ if ($method === 'POST') {
         exit;
     }
 
-    // Параметр, который определяет формат результата
     $details = $_GET['details'] ?? '0';
 
-    // Получаем product_id из wishlists для данного customer_id
     $stmt = $pdo->prepare("SELECT product_id FROM wishlists WHERE customer_id = ?");
     $stmt->execute([$customer_id]);
     $product_ids = $stmt->fetchAll(PDO::FETCH_COLUMN);
 
     if (empty($product_ids)) {
-        // Если вишлист пуст, возвращаем пустой массив
         echo json_encode(['wishlist' => []]);
         exit;
     }
@@ -81,7 +78,6 @@ if ($method === 'POST') {
 
         echo json_encode(['wishlist' => $products]);
     } else {
-        // Возвращаем только массив product_id
         echo json_encode(['wishlist' => $product_ids]);
     }
     exit;

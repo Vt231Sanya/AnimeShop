@@ -58,7 +58,7 @@ const CreateProduct = ({ filters, setFilters }) => {
         }
 
         try {
-            await axios.post(basePath + "product?action=create", {
+            await axios.post(basePath + "product&action=create", {
                 name: formData.name,
                 description: formData.description,
                 price: formData.price,

@@ -176,7 +176,7 @@ const ProductDetails = ({ filters, setFilters }) => {
     const [newReviewRating, setNewReviewRating] = useState(5);
 
     const checkCart = () => {
-        fetch(basePath + `cart?customer_id=${userId}`)
+        fetch(basePath + `cart&customer_id=${userId}`)
             .then((res) => res.json())
             .then((data) => {
                 let found = false;
@@ -199,7 +199,7 @@ const ProductDetails = ({ filters, setFilters }) => {
     };
 
     useEffect(() => {
-        fetch(basePath + `wishlist?customer_id=${userId}`)
+        fetch(basePath + `wishlist&customer_id=${userId}`)
             .then((res) => res.json())
             .then((data) => {
                 if (data.wishlist && data.wishlist.includes(product.product_id)) {
@@ -267,7 +267,7 @@ const ProductDetails = ({ filters, setFilters }) => {
             return;
         }
         try {
-            await fetch(basePath + "reviews", {
+            await fetch(basePath + "reviews&action=add", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -288,7 +288,7 @@ const ProductDetails = ({ filters, setFilters }) => {
 
     const delProduct = async () => {
         try {
-            await axios.delete(basePath + `product?action=delete&id=${productId}`);
+            await axios.delete(basePath + `product&action=delete?id=${productId}`);
             alert(
                 "Товар успішно видалений. Ви можете повернутися до списку товарів, щоб відновити відгуки."
             );

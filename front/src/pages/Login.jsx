@@ -85,7 +85,7 @@ const Login = ({ filters, setFilters }) => {
             return;
         }
         try {
-            const response = await fetch(basePath + 'auth?action=login', {
+            const response = await fetch(basePath + 'auth&action=login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

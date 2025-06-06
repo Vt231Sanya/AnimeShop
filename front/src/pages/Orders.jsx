@@ -73,7 +73,7 @@ const Orders = ({ filters, setFilters }) => {
         const fetchOrders = async () => {
             try {
                 const response = await axios.get(basePath + "orders", {
-                    params: { customer_id: userId },
+                    params: { action: "history", customer_id: userId },
                 });
                 if (response.data.status === "success") {
                     const grouped = {};

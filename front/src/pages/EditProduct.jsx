@@ -29,12 +29,13 @@ const EditProduct = ({ filters, setFilters }) => {
         }
 
         const fetchCategories = async () => {
-            const res = await axios.get(basePath + "categories");
+            const res = await axios.get(basePath + "categories&action=all");
+            console.log("Категорії:", res.data);
             setCategories(res.data);
         };
 
         const fetchProduct = async () => {
-            const res = await axios.get(basePath + `product?action=details&id=${id}`);
+            const res = await axios.get(basePath + `product&action=details&id=${id}`);
             setFormData(res.data);
         };
 
@@ -66,7 +67,7 @@ const EditProduct = ({ filters, setFilters }) => {
         }
 
         try {
-            await axios.post(`${basePath}product?action=edit&id=${id}`, formData);
+            await axios.post(`${basePath}product&action=edit&id=${id}`, formData);
             alert("Продукт успішно оновлено!");
             navigate("/product");
         } catch (error) {

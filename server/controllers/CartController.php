@@ -21,7 +21,7 @@ class CartController
     {
         switch ($method) {
             case 'GET':
-                $this->list($input);
+                $this->get();
                 break;
             case 'POST':
                 $this->addOrCheckout($input);
@@ -35,9 +35,9 @@ class CartController
         }
     }
 
-    private function list($input)
+    private function get()
     {
-        $customer_id = $_GET['customer_id'] ?? 0;
+        $customer_id = $_GET['customer_id'];
         echo json_encode($this->model->getCartItems($customer_id));
     }
 
@@ -69,9 +69,15 @@ class CartController
 
     private function delete($input)
     {
+        error_log('DELETE input: ' . print_r($input, true));
+        if (empty($input['cart_id'])) {
+            echo json_encode(['status' => 'failed', 'message' => 'cart_id required']);
+            return;
+        }
         $result = $this->model->deleteItem($input['cart_id']);
         echo json_encode(['status' => $result ? 'cleared' : 'failed']);
     }
+
 
     private function sendEmail($customer_id, $phone, $items)
     {
