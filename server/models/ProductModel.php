@@ -9,6 +9,15 @@ class ProductModel
         $this->pdo = $pdo;
     }
 
+    public function getAllForDis($params)
+    {
+        $sql = "SELECT * FROM Products";
+        $stmt = $this->pdo->prepare($sql);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getAll($params)
     {
         $sql = "SELECT * FROM Products";
@@ -117,14 +126,27 @@ class ProductModel
 
     public function delete($id)
     {
-        // Спочатку видалити пов'язані відгуки
+        // Видалити відгуки, пов'язані з товаром
         $stmt = $this->pdo->prepare("DELETE FROM Reviews WHERE product_id = ?");
         $stmt->execute([$id]);
 
-        // Потім видалити сам продукт
+        // Видалити товар з обраного
+        $stmt = $this->pdo->prepare("DELETE FROM Wishlists WHERE product_id = ?");
+        $stmt->execute([$id]);
+
+        // Видалити товар з кошика
+        $stmt = $this->pdo->prepare("DELETE FROM Cart WHERE product_id = ?");
+        $stmt->execute([$id]);
+
+        // Видалити товар із замовлень
+        $stmt = $this->pdo->prepare("DELETE FROM Orders WHERE product_id = ?");
+        $stmt->execute([$id]);
+
+        // Нарешті, видалити сам товар
         $stmt = $this->pdo->prepare("DELETE FROM Products WHERE product_id = ?");
         $stmt->execute([$id]);
     }
+
 
     public function getMaxPrice()
     {

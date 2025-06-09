@@ -14,6 +14,12 @@ class ProductController
         echo json_encode($this->model->getAll($params));
     }
 
+    public function listProductsDis($params)
+    {
+        echo json_encode($this->model->getAllForDis($params));
+    }
+
+
     public function getProductDetails($params)
     {
         $id = intval($params['id'] ?? 0);
