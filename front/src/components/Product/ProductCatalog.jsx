@@ -30,12 +30,13 @@ export default function ProductCatalog({ filters, setFilters }) {
     }, [filters]);
 
     useEffect(() => {
-        fetchCategories();
+
         fetchMaxPrice();
     }, []);
 
     useEffect(() => {
         fetchProducts();
+        fetchCategories();
     }, [page, filters]);
 
     useEffect(() => {
@@ -111,7 +112,7 @@ export default function ProductCatalog({ filters, setFilters }) {
 
     return (
         <div className={'product-catalog'}>
-            <h1 className={'header'}>{categoryId != 0 ? cat.category_name : "Всі категорії"}</h1>
+            <h1 className={'header'}>{categoryId != 0 && cat.category_name ? cat.category_name : "Всі категорії"}</h1>
 
             {maxPrice.maxPrice != 1 &&
                 <PriceFilter min={0} max={maxPrice.maxPrice} onChange={handlePriceChange} />

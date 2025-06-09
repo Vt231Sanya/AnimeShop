@@ -288,7 +288,7 @@ const ProductDetails = ({ filters, setFilters }) => {
 
     const delProduct = async () => {
         try {
-            await axios.delete(basePath + `product&action=delete?id=${productId}`);
+            await axios.delete(basePath + `product&action=delete&id=${productId}`);
             alert(
                 "Товар успішно видалений. Ви можете повернутися до списку товарів, щоб відновити відгуки."
             );

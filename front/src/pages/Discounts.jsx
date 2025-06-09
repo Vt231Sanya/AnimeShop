@@ -25,7 +25,7 @@ const Discounts = ({filters, setFilters}) => {
 
     const fetchProducts = async () => {
         const response = await axios.get(basePath + 'product', {
-            params: { action: 'list' }
+            params: { action: 'discount' }
         });
         setProducts(response.data);
     }

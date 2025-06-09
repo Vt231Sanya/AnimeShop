@@ -5,7 +5,7 @@ import Card from "../components/Card/Card";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 
-const Wishlist = (filters, setFilters) => {
+const Wishlist = ({ filters, setFilters }) => {
     const [wishList, setWishList] = useState([]);
     const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const userId = Cookies.get('userId');
@@ -20,7 +20,7 @@ const Wishlist = (filters, setFilters) => {
 
     useEffect(() => {
         fetchWishlist();
-    }, [wishList])
+    }, [])
 
     const styles = {
         page: {
@@ -32,7 +32,7 @@ const Wishlist = (filters, setFilters) => {
             borderRadius: "2em",
 
         },
-        header: {
+        title: {
             fontSize: "2.8rem",
             fontWeight: "700",
             color: "#9370DB",
@@ -92,8 +92,8 @@ const Wishlist = (filters, setFilters) => {
     return (
         <div style={styles.main}>
             <Header filters={filters} setFilters={setFilters}/>
-            <main style={styles.page}>
-                <h1 style={styles.header}>Ваш вішліст</h1>
+            <div style={styles.page}>
+                <h1 style={styles.title}>Ваш вішліст</h1>
 
                 {wishList.length === 0 ? (
                     <p style={styles.emptyText}>Ваш вішліст поки що порожній.</p>
@@ -104,7 +104,7 @@ const Wishlist = (filters, setFilters) => {
                         ))}
                     </div>
                 )}
-            </main>
+            </div>
             <Footer />
         </div>
 

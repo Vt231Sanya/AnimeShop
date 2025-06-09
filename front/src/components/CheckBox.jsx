@@ -36,6 +36,9 @@ const StyledWrapper = styled.div`
     width: 30px;
     height: 30px;
     transition: .3s;
+      &:hover {
+          transform: scale(1.2);
+      }
   }
 
   .heart-container .checkbox {

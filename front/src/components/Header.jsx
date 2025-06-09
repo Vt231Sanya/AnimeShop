@@ -6,6 +6,8 @@ import ModalSearch from "./ModalSearch";
 import {useNavigate} from "react-router-dom";
 import Logout from "./Logout";
 import Cookies from "js-cookie";
+import styled from 'styled-components';
+
 
 const Header = ({filters, setFilters}) => {
     const [categories, setCategories] = useState([]);
@@ -70,6 +72,72 @@ const Header = ({filters, setFilters}) => {
         fetchProducts();
     }, [filters, searchInput]);
 
+    const Icon = styled.div`
+  font-size: 20px;
+  cursor: pointer;
+  color: white;
+  transition: transform 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    transform: scale(1.2);
+    color: #9370DB;
+  }
+`;
+
+    const Logo = styled.img`
+  height: 50px;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+`;
+
+    const CategorySelect = styled.select`
+  background-color: #9370DB;
+  color: azure;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+
+  //&:hover {
+  //  transform: scale(1.05);
+  //  background-color: #7a5fd1;
+  //}
+`;
+
+    const SalesButton = styled.button`
+  background-color: #9370DB;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(147, 112, 219, 0.5);
+  }
+`;
+
+    const SearchIcon = styled.div`
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    transform: scale(1.2);
+    color: #9370DB;
+  }
+`;
+
     const styles = {
         header: {
             color: "white",
@@ -80,7 +148,7 @@ const Header = ({filters, setFilters}) => {
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            gap: "1em",
+            gap: "2em",
             padding: "30px 20px",
         },
         logo: {
@@ -144,19 +212,18 @@ const Header = ({filters, setFilters}) => {
         <header style={styles.header}>
             <div style={styles.topLine} />
             <div style={styles.container}>
-                <div onClick={() => navigate("/")} style={{ cursor: "pointer" }}>
-                    <img src={logo} alt="Лого" style={styles.logo} />
+                <div onClick={() => navigate("/")}>
+                    <Logo src={logo} alt="Лого" />
                 </div>
 
-                <select name="categoryId" style={styles.catalogButton} value={filters.categoryId} onChange={categoryChange}>
-                    <FaThLarge />
+                <CategorySelect name="categoryId" value={filters.categoryId} onChange={categoryChange}>
                     <option value="0">Всі категорії</option>
                     {categories.map((cat) => (
                         <option key={cat.category_id} value={cat.category_id}>
                             {cat.category_name}
                         </option>
                     ))}
-                </select>
+                </CategorySelect>
 
                 <div style={styles.search}>
                     <div style={styles.searchBar}>
@@ -169,10 +236,9 @@ const Header = ({filters, setFilters}) => {
                             onChange={handleChange}
                             onKeyDown={handleKeyDown}
                         />
-                        <FaSearch
-                            style={{ color: "white", cursor: "pointer" }}
-                            onClick={handleSearchSubmit}
-                        />
+                        <SearchIcon onClick={handleSearchSubmit}>
+                            <FaSearch />
+                        </SearchIcon>
                     </div>
 
                     {searchInput.length > 0 && products.length > 0 && modal && (
@@ -183,15 +249,20 @@ const Header = ({filters, setFilters}) => {
                     )}
                 </div>
 
-
-
-                <button style={styles.salesButton} onClick={() => navigate('/discounts')}>Акції</button>
+                <SalesButton onClick={() => navigate('/discounts')}>Акції</SalesButton>
 
                 <div style={styles.iconGroup}>
-                    <FaHeart onClick={() => {isAuthenticated ? navigate('/wishlist') : navigate('/login')}} style={styles.icon} />
-                    <FaShoppingCart onClick={() => {isAuthenticated ? navigate('/cart') : navigate('/login')}} style={styles.icon} />
-                    <FaUser onClick={() => {isAuthenticated ? handleLogoutClick() : navigate('/login')}} style={styles.icon} />
+                    <Icon onClick={() => isAuthenticated ? navigate('/wishlist') : navigate('/login')}>
+                        <FaHeart />
+                    </Icon>
+                    <Icon onClick={() => isAuthenticated ? navigate('/cart') : navigate('/login')}>
+                        <FaShoppingCart />
+                    </Icon>
+                    <Icon onClick={() => isAuthenticated ? handleLogoutClick() : navigate('/login')}>
+                        <FaUser />
+                    </Icon>
                 </div>
+
             </div>
             <Logout
                 isOpen={isLogoutOpen}

@@ -43,6 +43,9 @@ switch ($uri) {
             case 'list':
                 $controller->listProducts($_GET);
                 break;
+            case 'discount':
+                $controller->listProductsDis($_GET);
+                break;
             case 'details':
                 $controller->getProductDetails($_GET);
                 break;
@@ -53,7 +56,7 @@ switch ($uri) {
                 $controller->editProduct($_GET, $input);
                 break;
             case 'delete':
-                $controller->deleteProduct($_GET + $_POST);
+                $controller->deleteProduct($_GET);
                 break;
             case 'maxPrice':
                 $controller->getMaxPrice();
