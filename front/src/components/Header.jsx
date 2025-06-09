@@ -33,7 +33,9 @@ const Header = ({filters, setFilters}) => {
         }
     };
     const categoryChange = (e) => {
-        navigate("/product?cat=" + e.target.value);
+        const selectedCategory = e.target.value;
+        setFilters((prev) => ({ ...prev, categoryId: selectedCategory }));
+        navigate("/product?cat=" + selectedCategory);
     }
 
     const handleLogoutClick = () => {

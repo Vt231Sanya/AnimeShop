@@ -94,12 +94,31 @@ class CartController
             $mail->setFrom('snagy.sasha@gmail.com', 'OnigirI');
             $mail->addAddress('vt231_noo@student.ztu.edu.ua');
             $mail->isHTML(false);
+            $mail->CharSet = 'UTF-8';
+
+            global $pdo;
+
+            $stmtUser = $pdo->prepare('SELECT first_name FROM customers WHERE customer_id = :id');
+            $stmtUser->execute([':id' => $customer_id]);
+            $user = $stmtUser->fetch(PDO::FETCH_ASSOC);
+            $customer_name = $user ? $user['first_name'] : '[Невідомий користувач]';
 
             $mail->Subject = 'Нове замовлення';
-            $body = "Користувач ID {$customer_id}, телефон {$phone}, замовив:\n";
+            $body = "Користувач: {$customer_name} (ID {$customer_id}), Телефон: {$phone}, замовив:\n";
+
+            $stmtProduct = $pdo->prepare('SELECT name, price FROM products WHERE product_id = :id');
+
             foreach ($items as $item) {
-                $body .= "- ID товару: {$item['product_id']}, Кількість: {$item['quantity']}\n";
+                $stmtProduct->execute([':id' => $item['product_id']]);
+                $product = $stmtProduct->fetch(PDO::FETCH_ASSOC);
+
+                if ($product) {
+                    $body .= "- {$product['name']} ({$product['price']} грн) × {$item['quantity']}\n";
+                } else {
+                    $body .= "- [Невідомий товар ID {$item['product_id']}] × {$item['quantity']}\n";
+                }
             }
+
             $mail->Body = $body;
             $mail->send();
         } catch (Exception $e) {
@@ -107,4 +126,5 @@ class CartController
             exit;
         }
     }
+
 }

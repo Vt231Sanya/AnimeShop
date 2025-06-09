@@ -102,6 +102,8 @@ const Cart = ({ filters, setFilters }) => {
     const userId = Cookies.get('userId');
     const [cartItems, setCartItems] = useState([]);
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
+    const [showSuccessMessage, setShowSuccessMessage] = useState(false);
 
     const fetchProducts = async () => {
         try {
@@ -122,17 +124,26 @@ const Cart = ({ filters, setFilters }) => {
             return;
         }
 
+        setIsLoading(true);
+
         try {
             const response = await axios.post(basePath + 'cart', {
                 action: "checkout",
                 customer_id: userId,
-                phone: phoneNumber // <- Додано параметр телефону
+                phone: phoneNumber
             });
+
             console.log(response.data);
+            setShowSuccessMessage(true); // Показуємо повідомлення
+            setPhoneNumber(""); // Очищаємо поле телефону
+            fetchProducts(); // Оновлюємо кошик
+            setTimeout(() => setShowSuccessMessage(false), 5000); // Ховаємо через 5 секунд
         } catch (err) {
             console.error("Error creating order:", err);
+            alert("Сталася помилка під час оформлення замовлення.");
+        } finally {
+            setIsLoading(false); // Завантаження завершено
         }
-        fetchProducts();
     };
 
 
@@ -227,18 +238,37 @@ const Cart = ({ filters, setFilters }) => {
                                     borderRadius: "8px",
                                     border: "1px solid #ccc",
                                     marginTop: "1rem",
-                                    // width: "210px"
                                 }}
                             />
                             <button style={styles.button} onClick={createOrder}>
-                                Зробити замовлення
+                                {isLoading ? "Завантаження..." : "Зробити замовлення"}
                             </button>
                         </div>
-
 
                     </>
                 )}
             </main>
+
+
+            {showSuccessMessage && (
+                <div
+                    style={{
+                        position: "fixed",
+                        bottom: "20px",
+                        right: "20px",
+                        backgroundColor: "#4BB543",
+                        color: "white",
+                        padding: "1rem 1.5rem",
+                        borderRadius: "10px",
+                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+                        zIndex: 1000,
+                        fontSize: "1rem"
+                    }}
+                >
+                    Дякуємо за замовлення! Як тільки воно буде готове, ми зв'яжемося з вами 😊
+                </div>
+            )}
+
             <Footer />
         </div>
     );
