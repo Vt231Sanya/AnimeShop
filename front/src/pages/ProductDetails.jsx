@@ -153,6 +153,23 @@ const ProductDetails = ({ filters, setFilters }) => {
             fontWeight: "700",
             fontSize: "1rem",
         },
+        deleteButton: {
+            float: 'right',
+            background: '#FF6CF9',
+            border: 'none',
+            color: '#9370DB',
+            fontSize: '18px',
+            fontWeight: 'bold',
+            borderRadius: '5px',
+            width: '28px',
+            height: '28px',
+            lineHeight: '26px',
+            textAlign: 'center',
+            cursor: 'pointer',
+            transition: 'transform 0.2s',
+
+        },
+
     };
     const isAuth = Cookies.get("isAuth") || false;
     const navigate = useNavigate();
@@ -171,7 +188,6 @@ const ProductDetails = ({ filters, setFilters }) => {
     });
     const [inCart, setInCart] = useState(false);
 
-    // Нові стани для відгуку
     const [newReviewText, setNewReviewText] = useState("");
     const [newReviewRating, setNewReviewRating] = useState(5);
 
@@ -299,6 +315,22 @@ const ProductDetails = ({ filters, setFilters }) => {
         }
     }
 
+    const handleDeleteReview = async (reviewId) => {
+        try {
+            await axios.post('http://localhost/AnimeShop/server/index.php?controller=reviews&action=delete', {
+                review_id: reviewId,
+            });
+            // Онови відгуки після видалення
+            setProduct((prevProduct) => ({
+                ...prevProduct,
+                Reviews: prevProduct.Reviews.filter(r => r.review_id !== reviewId)
+            }));
+        } catch (error) {
+            console.error('Помилка при видаленні відгуку:', error);
+        }
+    };
+
+
     return (
         <div style={styles.main}>
             <Header filters={filters} setFilters={setFilters} />
@@ -371,12 +403,22 @@ const ProductDetails = ({ filters, setFilters }) => {
                     ) : (
                         product.Reviews.map((review) => (
                             <article key={review.review_id} style={styles.reviewItem}>
+                                {userId == 1 &&
+                                <button
+                                    onClick={() => handleDeleteReview(review.review_id)}
+                                    style={styles.deleteButton}
+                                    title="Видалити відгук"
+                                >
+                                    ✖
+                                </button>
+                                }
                                 <p style={styles.reviewRating}>Оцінка: {review.rating}/5</p>
                                 <p style={styles.reviewText}>"{review.review_text}"</p>
                                 <p style={styles.reviewDate}>Дата: {review.review_date}</p>
                             </article>
                         ))
                     )}
+
 
                     {isAuth ?
                         <form style={styles.reviewForm} onSubmit={submitReview}>

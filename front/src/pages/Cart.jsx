@@ -134,15 +134,15 @@ const Cart = ({ filters, setFilters }) => {
             });
 
             console.log(response.data);
-            setShowSuccessMessage(true); // Показуємо повідомлення
-            setPhoneNumber(""); // Очищаємо поле телефону
-            fetchProducts(); // Оновлюємо кошик
-            setTimeout(() => setShowSuccessMessage(false), 5000); // Ховаємо через 5 секунд
+            setShowSuccessMessage(true);
+            setPhoneNumber("");
+            fetchProducts();
+            setTimeout(() => setShowSuccessMessage(false), 5000);
         } catch (err) {
             console.error("Error creating order:", err);
             alert("Сталася помилка під час оформлення замовлення.");
         } finally {
-            setIsLoading(false); // Завантаження завершено
+            setIsLoading(false);
         }
     };
 

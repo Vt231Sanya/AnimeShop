@@ -62,15 +62,15 @@ export default function NotFound() {
             <div style={styles.code}>
                 <span style={styles.codeSpan}>404</span>
                 <motion.img
-                    src="https://pngimg.com/uploads/anime_girl/anime_girl_PNG27.png" // Заменить на своё изображение
+                    src="https://pngimg.com/uploads/anime_girl/anime_girl_PNG27.png"
                     alt="Anime Girl Peeking"
                     style={styles.image}
                     initial={{ y: -100, opacity: 1 }}
-                    animate={{ y: [0, -20, 0] }} // Двигаем по y: 0 -> -20px -> 0
+                    animate={{ y: [0, -20, 0] }}
                     transition={{
-                        duration: 4, // длительность одного цикла (сек)
+                        duration: 4,
                         ease: "easeInOut",
-                        repeat: Infinity, // бесконечный повтор
+                        repeat: Infinity,
                         repeatType: "loop",
                     }}
                 />

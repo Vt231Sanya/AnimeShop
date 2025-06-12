@@ -29,7 +29,6 @@ const CreateProduct = ({ filters, setFilters }) => {
             navigate("/login");
             return;
         }
-        // Завантажуємо список категорій з бекенду
         fetchCategories();
     }, [isAuth, navigate]);
 

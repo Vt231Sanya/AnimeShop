@@ -59,7 +59,6 @@ const Logout = ({ isOpen, onClose, onConfirm }) => {
         <div style={styles.overlay} onClick={onClose}>
             <div style={styles.modal} onClick={e => e.stopPropagation()}>
                 <h2>Привіт, {name}</h2>
-                {/*<p>Ви впевнені, що хочете вийти?</p>*/}
                 <div style={styles.buttons}>
                     <button
                         style={styles.buttonCancel}

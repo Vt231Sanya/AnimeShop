@@ -1,5 +1,5 @@
 <?php
-class ReviewModel {
+class  ReviewModel {
     private $pdo;
 
     public function __construct($pdo) {
@@ -21,5 +21,10 @@ class ReviewModel {
             ':review_text' => trim($text),
             ':rating' => $rating
         ]);
+    }
+
+    public function deleteReview($reviewId) {
+        $stmt = $this->pdo->prepare("DELETE FROM reviews WHERE review_id = ?");
+        $stmt->execute([$reviewId]);
     }
 }

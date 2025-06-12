@@ -13,6 +13,9 @@ class ReviewController {
             case 'add':
                 $this->addReview($input);
                 break;
+            case 'delete':
+                $this->deleteReview($input);
+                break;
             default:
                 echo json_encode(['status' => 'error', 'message' => 'Unknown review action']);
         }
@@ -42,5 +45,18 @@ class ReviewController {
             echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
         }
     }
-}
 
+    private function deleteReview($input) {
+        if (!isset($input['review_id'])) {
+            echo json_encode(['status' => 'error', 'message' => 'Missing review_id']);
+            return;
+        }
+
+        try {
+            $this->model->deleteReview((int)$input['review_id']);
+            echo json_encode(['status' => 'success', 'message' => 'Review deleted successfully']);
+        } catch (Exception $e) {
+            echo json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+        }
+    }
+}

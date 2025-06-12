@@ -55,7 +55,6 @@ const Card = ({product}) => {
 
     const toggleWishlist = () => {
         if (!inWishlist) {
-            // добавить в вишлист
             fetch(basePath + 'wishlist', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -68,7 +67,6 @@ const Card = ({product}) => {
                     alert("Не вдалося оновити вишліст.");
             });
         } else {
-            // удалить из вишлиста
             fetch(basePath + 'wishlist', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },

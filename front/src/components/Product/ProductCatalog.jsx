@@ -21,8 +21,6 @@ export default function ProductCatalog({ filters, setFilters }) {
     const basePath = 'http://localhost/AnimeShop/server/index.php?controller=';
     const isFetchingRef = useRef(false);
 
-
-    // Reset on filters change
     useEffect(() => {
         setProducts([]);
         setPage(1);
@@ -60,7 +58,7 @@ export default function ProductCatalog({ filters, setFilters }) {
     };
 
     const fetchProducts = async () => {
-        if (isFetchingRef.current) return; // защита от повторов
+        if (isFetchingRef.current) return;
         isFetchingRef.current = true;
         setLoading(true);
         try {

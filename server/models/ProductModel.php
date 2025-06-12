@@ -126,23 +126,18 @@ class ProductModel
 
     public function delete($id)
     {
-        // Видалити відгуки, пов'язані з товаром
         $stmt = $this->pdo->prepare("DELETE FROM Reviews WHERE product_id = ?");
         $stmt->execute([$id]);
 
-        // Видалити товар з обраного
         $stmt = $this->pdo->prepare("DELETE FROM Wishlists WHERE product_id = ?");
         $stmt->execute([$id]);
 
-        // Видалити товар з кошика
         $stmt = $this->pdo->prepare("DELETE FROM Cart WHERE product_id = ?");
         $stmt->execute([$id]);
 
-        // Видалити товар із замовлень
         $stmt = $this->pdo->prepare("DELETE FROM Orders WHERE product_id = ?");
         $stmt->execute([$id]);
 
-        // Нарешті, видалити сам товар
         $stmt = $this->pdo->prepare("DELETE FROM Products WHERE product_id = ?");
         $stmt->execute([$id]);
     }
